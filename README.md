@@ -2,11 +2,11 @@
 Desafios - South System (Receita)
 
 ### Default
-- [INPUT FILE]: {jar-path}/IRS/REQUEST/account
-- [OUTPUT FILE]: {jar-path}/IRS/RESPONSE/account
-- [ERROR FILE]: {jar-path}/IRS/ERROR/account
+- [INPUT FILE]: "{jar-path}/IRS/REQUEST/account"
+- [OUTPUT FILE]: "{jar-path}/IRS/RESPONSE/account"
+- [ERROR FILE]: "{jar-path}/IRS/ERROR/account"
 - [PREFIXO]: Só serão processados arquivos com o PREFIXO = csv-request (default)
-- [SEPARATOR]: ;
+- [SEPARATOR]: ";"
 - [SCHEDULE]: 5 segundos
 
 ### Algumas melhorias possíveii
