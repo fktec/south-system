@@ -3,23 +3,26 @@ package br.com.south.system.irs.domain;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvNumber;
 
-public class Account {
+import br.com.south.system.irs.common.CsvModel;
+import br.com.south.system.irs.common.helpers.CSVHelper;
+
+public class Account implements CsvModel {
 
 	@CsvBindByPosition(position = 0)
     private String branch;
 	
-    @CsvBindByPosition(position = 1)
+	@CsvBindByPosition(position = 1)
     private String number;
     
-    @CsvNumber(value = "###,00")
-    @CsvBindByPosition(position = 2)
+	@CsvNumber(value = "###,00")
+	@CsvBindByPosition(position = 2)
     private Double balance;
     
-    @CsvBindByPosition(position = 3)
+	@CsvBindByPosition(position = 3)
     private String status;
     
-    @CsvBindByPosition(position = 4)
-    private boolean approved;
+	@CsvBindByPosition(position = 4)
+    private Boolean approved;
     
     public Account() {}
 
@@ -69,12 +72,22 @@ public class Account {
 		this.status = status;
 	}
 
-	public boolean isApproved() {
+	public Boolean getApproved() {
 		return approved;
 	}
 
-	public void setApproved(boolean approved) {
+	public void setApproved(Boolean approved) {
 		this.approved = approved;
+	}
+
+	@Override
+	public String[] generateHeaders() {
+		return new String[]{"agencia", "conta", "saldo", "status", "approved"};
+	}
+
+	@Override
+	public String[] generateValues() {
+		return new String[]{branch, number, CSVHelper.csvValue(balance), status, CSVHelper.csvValue(approved)};
 	}
 
 }

@@ -3,9 +3,12 @@ package br.com.south.system.irs.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @author gabriel_stabel<gabriel_stabel@sicredi.com.br>
  */
+@Service
 public class ReceitaService {
 
 	// Esta é a implementação interna do "servico" do banco central. Veja o código fonte abaixo para ver os formatos esperados pelo Banco Central neste cenário.
@@ -13,7 +16,11 @@ public class ReceitaService {
     public boolean atualizarConta(String agencia, String conta, double saldo, String status)
             throws RuntimeException, InterruptedException {
 		
-			
+    	// TODO: # Apenas para forçar um error mais facilmente.
+    	 if (agencia.equals("0")) {
+             throw new RuntimeException("Agência não pode ser zero");
+         }	
+    	
         // Formato agencia: 0000
         if (agencia == null || agencia.length() != 4) {
             return false;
@@ -36,9 +43,9 @@ public class ReceitaService {
         }
 
         // Simula tempo de resposta do serviço (entre 1 e 5 segundos)
-        long wait = Math.round(Math.random() * 4000) + 1000;
-        Thread.sleep(wait);
-
+       // long wait = Math.round(Math.random() * 4000) + 1000;
+       // Thread.sleep(wait);
+        
         // Simula cenario de erro no serviço (0,1% de erro)
         long randomError = Math.round(Math.random() * 1000);
         if (randomError == 500) {

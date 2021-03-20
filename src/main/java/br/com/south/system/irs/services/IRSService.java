@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.south.system.irs.domain.Account;
@@ -13,7 +14,8 @@ public class IRSService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(IRSService.class);
 	
-	private ReceitaService receitaService = new ReceitaService();
+	@Autowired
+	private ReceitaService receitaService;
 
 	public void updateAccount(Account account) {
 		try {
