@@ -23,6 +23,7 @@ import br.com.south.system.irs.common.CustomMappingStrategy;
 import br.com.south.system.irs.common.helpers.CSVHelper;
 import br.com.south.system.irs.domain.Account;
 
+
 @Component
 public class ScheduleIRSAccountService {
 	
@@ -30,6 +31,9 @@ public class ScheduleIRSAccountService {
 	
 	@Value("${file.csv.separator}")
 	private char csvSeparator;
+	
+	@Value("${file.irs.account.path}")
+	private String fileIrsAccountPath;
 	
 	@Value("${file.irs.account.prefix}")
 	private String fileIrsAccountPrefix;
@@ -43,13 +47,13 @@ public class ScheduleIRSAccountService {
 	@Value("${file.irs.account.error.output}")
 	private String fileIrsAccountErrorOutput;
 	
-	@Value("${file.irs.account.input.system}")
+	@Value("${file.irs.input.system}")
 	private String fileIrsAccountInputSystem;
 	
-	@Value("${file.irs.account.output.system}")
+	@Value("${file.irs.output.system}")
 	private String fileIrsAccountOutputSystem;
 	
-	@Value("${file.irs.account.error.output.system}")
+	@Value("${file.irs.error.output.system}")
 	private String fileIrsAccountErrorOutputSystem;
 	
 	@Autowired
@@ -63,8 +67,8 @@ public class ScheduleIRSAccountService {
 	{
 		List<Account> accountErrors = null;
 		
-		if (extractListFiles(extractFilesPath(fileIrsAccountInput, fileIrsAccountInputSystem)) != null) {
-			for (File file : extractListFiles(extractFilesPath(fileIrsAccountInput, fileIrsAccountInputSystem))) {
+		if (extractListFiles(extractFilesPath(fileIrsAccountInput, fileIrsAccountInputSystem, fileIrsAccountPath)) != null) {
+			for (File file : extractListFiles(extractFilesPath(fileIrsAccountInput, fileIrsAccountInputSystem, fileIrsAccountPath))) {
 				if (isAccountFile(file)) 
 				{
 					generateUpdatedAccounts(
@@ -110,7 +114,7 @@ public class ScheduleIRSAccountService {
 	
 	private void generateUpdatedAccountsInDirectory(String fileId, List<Account> accounts) throws Exception {
 		LOG.info("{} - Generating updated account...", fileId);
-		try (Writer writer = new PrintWriter(generateFileName(extractFilesPath(fileIrsAccountOutput, fileIrsAccountOutputSystem), fileId))) {
+		try (Writer writer = new PrintWriter(generateFileName(extractFilesPath(fileIrsAccountOutput, fileIrsAccountOutputSystem, fileIrsAccountPath), fileId))) {
 			CSVHelper.writeCsvFileByList(Account.class, writer, accounts, csvSeparator, customMappingStrategy);
 		}
 		LOG.info("{} - Updated account generation complete.", fileId);
@@ -118,7 +122,7 @@ public class ScheduleIRSAccountService {
 
 	private void generateFileErrors(String fileId, List<Account> accountErrors) throws Exception {
 		LOG.info("{} - Generating errors...", fileId);
-		try (Writer writerError = new PrintWriter(generateFileName(extractFilesPath(fileIrsAccountErrorOutput, fileIrsAccountErrorOutputSystem), "ERROR-" + fileId))) {
+		try (Writer writerError = new PrintWriter(generateFileName(extractFilesPath(fileIrsAccountErrorOutput, fileIrsAccountErrorOutputSystem, fileIrsAccountPath), "ERROR-" + fileId))) {
 			CSVHelper.writeCsvFileByList(Account.class, writerError, accountErrors, csvSeparator, customMappingStrategy);
 		}
 		LOG.info("{} - Error generation complete.", fileId);
@@ -136,13 +140,14 @@ public class ScheduleIRSAccountService {
 		return new File(absolutePathName).listFiles();
 	}
 	
-	private String extractFilesPath(String path, String defaultPath) {
+	private String extractFilesPath(String path, String defaultPath, String finalPath) {
 		return path != null && !path.isEmpty()
 				? path
-				: MessageFormat.format("{0}/{1}", FileSystems.getDefault()
+				: MessageFormat.format("{0}/{1}/{2}", FileSystems.getDefault()
 				        .getPath("")
 				        .toAbsolutePath(),
-				        defaultPath);
+				        defaultPath,
+				        finalPath);
 	}
 	
 	private String generateFileName(String filePath, String fileName) {
