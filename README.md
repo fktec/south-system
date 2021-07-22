@@ -1,6 +1,6 @@
 # south-system
-Java - Spring Boot
-Desafios - South System (Receita)
+- Java - Spring Boot
+- Desafios - South System (Receita)
 
 ### Default
 - **{PREFIXO}:** Só serão processados arquivos com o PREFIXO = csv-request (default)
